@@ -1,0 +1,14 @@
+name: G2DV
+title: G2DV
+username:
+account: dv-group2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7261607
+bundleId: 6387625
+url: https://dv-group2.shinyapps.io/G2DV/
+when: 1665407139.32667
+lastSyncTime: 1665407139.32669
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app.R|DataExerciseCodebook (2).txt
