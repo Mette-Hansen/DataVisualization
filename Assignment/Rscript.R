@@ -5,45 +5,39 @@ library(readr)
 library(data.table)
 library(ggplot2)
 library(rcartocolor)
+library(dplyr)
+library(gganimate)
+library(tidyr)
 
-
-#Reads the data and removes NA data
+#-----------------------Reads the data and removes NA data -----------------------------------------
 data <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
 na.omit(data)
-summary(data)
+#summary(data)
+#----------------------------------1. Scatterplot----------------------------------------------------
+data1 <- data[,12]
+data2 <- data[,14]
+data3 <- data[,1]
+data4 <- bind_cols(data2,data1)
+data5 <- bind_cols(data3,data4)
+data6 <-bind_cols(data5,data[,6])
+totalPlusNuclear <- gather(data6, key = "Type", value = "Value",-Year)
 
-#Just a test
-#ggplot(data) + geom_line(mapping = aes(x = data[[2]], y = data[[3]]))
+ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
+  geom_point(alpha = .7, size = 3) +
+  geom_smooth(method = "lm")
+#----------------------------------2 Bar charts-------------------------------------------------------
+data1 <- data[-2:-49,]
+head(data1)
+data2 <- data1[,-12:-14]
+head(data2)
+total1 <- gather(data2, key = "Type", value = "Value",-Year)
 
-#Scatterplot
-#ggplot(data, aes(x = data[[2]], y = data[[3]])) + geom_point()
-
-#Select columns from csv
-#dataTable <- read.table("USEnergy.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-#names(dataTable)
-#x1 <- dataTable["CoalProduction"]
-#y1 <- dataTable["NaturalGasProduction"]
-#plot(x1,y1)
-#ggplot(data = data, aes(x=Year, y=WindEnergyProduction)) + geom_col()
-#ggplot(data = data, aes(x=CoalProduction)) + geom_histogram()
+#this should preserve single bars
+ggplot(data=total1, aes(x = Type, y = Value, fill = Type)) + 
+  geom_bar(stat = "identity")
 
 
-#-------------Time Series graphs---------------------
-#Scatterplot over coal production
-#ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_point()
-
-#Timeseries over coal production -> answer to first question
-#coalProd <- data[[2]]
-#plot.ts(timeSeriesCoal, main = "Coal Production troughout the years", 
-#        xlab = "Year", ylab = "Quadrillion Btu",
-#        col = "#d55e00", lwd=3, type = "l")
-#timeSeriesCoal <- ts(coalProd, start = c(1973,1))
-#windEn <- data[[10]]
-#timeSeriesWind <- ts(windEn, start = c(1973,1))
-#plot.ts(timeSeriesWind, main = "Wind Energy Production troughout the years", 
-#        xlab = "Year", ylab = "Quadrillion Btu",
-#        col = "#0072b2", lwd=3, type = "l")+ abline()
-
+#----------------------------------3 & 4 & 5 Time Series graphs---------------------------------------
 ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
   labs(title = "Coal Production troughout the years", x="Year", y="Quadrillion Btu") +
   theme_bw()
@@ -52,11 +46,30 @@ ggplot(data = data, aes(x=Year, y=WindEnergyProduction)) + geom_line(color="#007
   labs(title = "Wind Energy Production troughout the years", x="Year", y="Quadrillion Btu") +
   theme_bw()
 
-ggplot(data = data) + labs(title = "Wind Energy and Coal Production troughout the years", 
-                           x="Year", y="Quadrillion Btu") + theme_bw() +
-  geom_line(color ="#D55E00", size = 2, aes(x=Year, y=CoalProduction)) +
-  geom_line(color="#0072B2", size=2, aes(x=Year, y=WindEnergyProduction)) 
-  
+ggplot(data = data, aes(x=Year, y=NuclearElectricPowerProduction)) + geom_line(color="#009e73", size=2) + 
+  labs(title = "Nuclear Energy Production troughout the years", x="Year", y="Quadrillion Btu") +
+  theme_bw()
+
+#----------------------------------6 Stacked horizontal bar chart graphs-------------------------------
+#Column 12-14
+ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
+  geom_col(aes(fill=Type), width = 0.7) + coord_flip()
+
+#----------------------------------7. Scatterplot animated----------------------------------------------
+data <- data[,-14]
+data <- data[,-13]
+data <- data[,-12]
+test <- gather(data, key = "Type", value = "Value", -Year)
+
+ggplot(test, aes(x=Year,y=Value, size = 2, color = Type)) +
+  geom_point() +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title = 'Year: {frame_time}', 
+       x = 'Year', 
+       y = 'Quadrillion Btu') +
+  transition_time(Year) +
+  ease_aes('linear')
 
 
 
