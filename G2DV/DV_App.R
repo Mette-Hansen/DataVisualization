@@ -14,12 +14,23 @@ setwd("C:/Users/Mette/Documents/DataVisualization/G2DV")
 data_app <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
 #remove missing values 
 na.omit(data_app)
+data_app <- data_app[,-14]
+data_app <- data_app[,-13]
+data_app <- data_app[,-12]
 head(data_app)
 
-d<-data.frame(x=rnorm(10),y=rnorm(10),z=1:10)
-gather(d,key = c("x","y"), value = "xy")
+#d<-data.frame(x=rnorm(10),y=rnorm(10),z=1:10)
+#gather(d,key = c("x","y"), value = "xy")
 
-gather(data_app, key = "Type", value = "Value", -Year)
+test <- gather(data_app, key = "Type", value = "Value", -Year)
+
+ggplot(test, aes(x=Year, y=Value, color = Type)) + geom_line(size = 1) + xlab("Year") +
+  ylab("Quadrillion Btu") +
+  ggtitle("Energy production in the US 1973-2022") + theme_bw()
+
+
+
+
 
 ggplot(data_app, aes(x=Year)) +
   geom_line(aes(y=CoalProduction), color = "darkred") +

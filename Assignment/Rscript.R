@@ -28,23 +28,39 @@ summary(data)
 #ggplot(data = data, aes(x=CoalProduction)) + geom_histogram()
 
 
-#-------------Final scatterplot that actually works---------------------
+#-------------Time Series graphs---------------------
 #Scatterplot over coal production
-ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_point()
+#ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_point()
+
 #Timeseries over coal production -> answer to first question
-coalProd <- data[[2]]
-timeSeriesCoal <- ts(coalProd, start = c(1973,1))
+#coalProd <- data[[2]]
+#plot.ts(timeSeriesCoal, main = "Coal Production troughout the years", 
+#        xlab = "Year", ylab = "Quadrillion Btu",
+#        col = "#d55e00", lwd=3, type = "l")
+#timeSeriesCoal <- ts(coalProd, start = c(1973,1))
+#windEn <- data[[10]]
+#timeSeriesWind <- ts(windEn, start = c(1973,1))
+#plot.ts(timeSeriesWind, main = "Wind Energy Production troughout the years", 
+#        xlab = "Year", ylab = "Quadrillion Btu",
+#        col = "#0072b2", lwd=3, type = "l")+ abline()
 
-windEn <- data[[10]]
-timeSeriesWind <- ts(windEn, start = c(1973,1))
-bind <- cbind(timeSeriesCoal,timeSeriesWind)
-plot.ts(bind)
-plot.ts(timeSeriesCoal, main = "Coal Production troughout the years", 
-        xlab = "Year", ylab = "Quadrillion Btu",
-        col = "#d55e00", lwd=3, type = "l")
+ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
+  labs(title = "Coal Production troughout the years", x="Year", y="Quadrillion Btu") +
+  theme_bw()
 
-x <- data[[1]] #Year
-plot(x, coalProd)
-lines(x, windEn, col="blue")
-legend("topleft", legend=c("Line 1", "Line 2"),
-       col=c("red", "blue"), lty = 1:2, cex=0.8)
+ggplot(data = data, aes(x=Year, y=WindEnergyProduction)) + geom_line(color="#0072B2", size=2) + 
+  labs(title = "Wind Energy Production troughout the years", x="Year", y="Quadrillion Btu") +
+  theme_bw()
+
+ggplot(data = data) + labs(title = "Wind Energy and Coal Production troughout the years", 
+                           x="Year", y="Quadrillion Btu") + theme_bw() +
+  geom_line(color ="#D55E00", size = 2, aes(x=Year, y=CoalProduction)) +
+  geom_line(color="#0072B2", size=2, aes(x=Year, y=WindEnergyProduction)) 
+  
+
+
+
+
+
+
+
