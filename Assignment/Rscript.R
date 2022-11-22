@@ -33,7 +33,7 @@ head(data2)
 total1 <- gather(data2, key = "Type", value = "Value",-Year)
 
 #this should preserve single bars
-ggplot(data=total1, aes(x = Type, y = Value, fill = Type)) + 
+ggplot(data=total1, aes(x = Type, y = Value, fill = Year)) + 
   geom_bar(stat = "identity")
 
 
