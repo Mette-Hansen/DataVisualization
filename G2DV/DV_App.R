@@ -3,6 +3,7 @@ library(shinyWidgets)
 library(dslabs)
 library(tidyverse)
 library(plotly)
+library(tidyr)
 
 #####Import Data
 
@@ -13,7 +14,20 @@ setwd("C:/Users/Mette/Documents/DataVisualization/G2DV")
 data_app <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
 #remove missing values 
 na.omit(data_app)
+head(data_app)
 
+d<-data.frame(x=rnorm(10),y=rnorm(10),z=1:10)
+gather(d,key = c("x","y"), value = "xy")
+
+gather(data_app, key = "Type", value = "Value", -Year)
+
+ggplot(data_app, aes(x=Year)) +
+  geom_line(aes(y=CoalProduction), color = "darkred") +
+  geom_line(aes(y=NaturalGasProduction), color = "blue") +
+  theme_bw() +
+  xlab("Year") +
+  ylab("Values") +
+  ggtitle("Energy production in the US 1973-2022")
 
 
 ui <- fluidPage(
@@ -24,7 +38,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       #Inputs
-      checkboxGroupInput("energyProductionInput", "Energy type", 
+      checkboxGroupInput("energyProductionInput", "CoalProduction", 
                          choices = c("CoalProduction", 
                                      "NaturalGasProduction",
                                      "CrudeOilProduction",
@@ -50,36 +64,27 @@ ui <- fluidPage(
     ),
   mainPanel(
     plotOutput("energyProdPlot"),
-    br(), br(),
-    verbatimTextOutput("stats"),
-    br(), br(),
-    plotlyOutput("distplot")
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  dataInput1 <- reactive({
-    data_app %>% 
-      filter(
-        data_app %in% energyProductionInput,
-        year >= input$yearInput[1],
-        year <= input$yearInput[2])
+  dataInput1 <- reactive({ data_app %>% filter(
+    data_app == input$energyProductionInput,
+    year >= input$yearInput[1],
+    year <= input$yearInput[2])
   })
   output$energyProdPlot <- renderPlot({
-    ggplot(dataInput1(), aes(x=year, y = value, color=data_app)) +
+    ggplot(dataInput1(), aes(x=Year, y = value, color=data_app)) +
       geom_line() +
       theme_bw() +
       xlab("Year") +
-      ylab("Count") +
+      ylab("Values") +
       ggtitle("Energy production in the US 1973-2022")
-  })
-  output$stats <- renderPrint({
-    aggregate(value ~ data_app, data = d(), sum())
   })
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server)
+#shinyApp(ui = ui, server = server)
 
