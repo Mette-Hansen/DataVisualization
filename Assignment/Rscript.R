@@ -26,7 +26,7 @@ totalPlusNuclear <- gather(data6, key = "Type", value = "Value",-Year)
 ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
   geom_point(alpha = .7, size = 3) +
   geom_smooth(method = "lm")
-#----------------------------------2 Bar charts-------------------------------------------------------
+#----------------------------------2 & 3 Treemaps-------------------------------------------------------
 data1 <- data[-1:-49,-12:-14]
 head(data1)
 data2 <- data[-2:-50,-12:-14]
@@ -56,9 +56,7 @@ ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
   geom_col(aes(fill=Type), width = 0.7) + coord_flip()
 
 #----------------------------------7. Scatterplot animated----------------------------------------------
-data <- data[,-14]
-data <- data[,-13]
-data <- data[,-12]
+data <- data[,-12:-14]
 test <- gather(data, key = "Type", value = "Value", -Year)
 
 ggplot(test, aes(x=Year,y=Value, size = 2, color = Type)) +

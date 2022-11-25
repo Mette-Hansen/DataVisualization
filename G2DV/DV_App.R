@@ -13,43 +13,24 @@ setwd("C:/Users/Mette/Documents/DataVisualization/G2DV")
 #Type in your data path
 data_app <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
 #remove missing values 
+data_app <- data_app[,-12:-14]
+setnafill(data_app, fill = 0)
 na.omit(data_app)
-data_app <- data_app[,-14]
-data_app <- data_app[,-13]
-data_app <- data_app[,-12]
 head(data_app)
 
-#d<-data.frame(x=rnorm(10),y=rnorm(10),z=1:10)
-#gather(d,key = c("x","y"), value = "xy")
-
 test <- gather(data_app, key = "Type", value = "Value", -Year)
+head(test)
 
-ggplot(test, aes(x=Year, y=Value, color = Type)) + geom_line(size = 1) + xlab("Year") +
+ggplot(test, aes(x=Year, y=Value, color = Type)) + geom_line(linewidth = 1) + xlab("Year") +
   ylab("Quadrillion Btu") +
-  ggtitle("Energy production in the US 1973-2022") + theme_bw()
-
-
-
-
-
-ggplot(data_app, aes(x=Year)) +
-  geom_line(aes(y=CoalProduction), color = "darkred") +
-  geom_line(aes(y=NaturalGasProduction), color = "blue") +
-  theme_bw() +
-  xlab("Year") +
-  ylab("Values") +
-  ggtitle("Energy production in the US 1973-2022")
-
+  ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022))
 
 ui <- fluidPage(
-  
-  # Title
   titlePanel("Energy production in the US 1973-2022"),
-  # Sidebar with a slider input for number of bins 
   sidebarLayout(
-    sidebarPanel(
-      #Inputs
-      checkboxGroupInput("energyProductionInput", "CoalProduction", 
+    sidebarPanel = 
+      #Checkboxinput group
+      checkboxGroupInput("energyProductionInput", label = "Select types of energy:",
                          choices = c("CoalProduction", 
                                      "NaturalGasProduction",
                                      "CrudeOilProduction",
@@ -59,7 +40,7 @@ ui <- fluidPage(
                                      "GeothermalEnergyProduction",
                                      "SolarEnergyProduction",
                                      "WindEnergyProduction",
-                                     "BioMassEnergyProduction"), 
+                                     "BiomassEnergyProduction"),
                          selected = c("CoalProduction", 
                                       "NaturalGasProduction",
                                       "CrudeOilProduction",
@@ -69,33 +50,29 @@ ui <- fluidPage(
                                       "GeothermalEnergyProduction",
                                       "SolarEnergyProduction",
                                       "WindEnergyProduction",
-                                      "BioMassEnergyProduction")),
-      sliderInput("yearInput", "Year", min = 1973, max = 2022, 
-                  value = c(1973,2022), sep = "")
-    ),
-  mainPanel(
-    plotOutput("energyProdPlot"),
-    )
-  )
+                                      "BiomassEnergyProduction")),
+    #year slider
+    sliderInput("yearInput", "Year", min = 1973, max = 2022, value = c(1973,2022), sep = ""),
+  ),
+  #
+  plotOutput("timeSeriesPlot")
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  dataInput1 <- reactive({ data_app %>% filter(
-    data_app == input$energyProductionInput,
-    year >= input$yearInput[1],
-    year <= input$yearInput[2])
+  dataInput1 <- reactive({ test %>% filter(
+    Type == input$energyProductionInput,
+    Year >= input$yearInput[1],
+    Year <= input$yearInput[2])
   })
-  output$energyProdPlot <- renderPlot({
-    ggplot(dataInput1(), aes(x=Year, y = value, color=data_app)) +
-      geom_line() +
-      theme_bw() +
-      xlab("Year") +
-      ylab("Values") +
-      ggtitle("Energy production in the US 1973-2022")
+  #Render functions
+  output$timeSeriesPlot <- renderPlot({
+    ggplot(dataInput1(), aes(x=Year, y=Value, color = Type)) + geom_line(linewidth = 1) + xlab("Year") +
+    ylab("Quadrillion Btu") +
+    ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022))
   })
 }
 
 # Run the application 
-#shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server)
 

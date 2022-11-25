@@ -1,4 +1,4 @@
-Year,CoalProduction,NaturalGasProduction,CrudeOilProduction,NaturalGasPlantLiquidsProduction,NuclearElectricPowerProduction,HydroelectricPower Production,GeothermalEnergyProduction,SolarEnergyProduction,WindEnergyProduction,BiomassEnergyProduction,TotalRenewableEnergyProduction,TotalPrimary EnergyProduction,TotalFossilFuelsProduction
+Year,CoalProduction,NaturalGasProduction,CrudeOilProduction,NaturalGasPlantLiquidsProduction,NuclearElectricPowerProduction,HydroelectricPowerProduction,GeothermalEnergyProduction,SolarEnergyProduction,WindEnergyProduction,BiomassEnergyProduction,TotalRenewableEnergyProduction,TotalPrimary EnergyProduction,TotalFossilFuelsProduction
 1973,1.166486,1.908249,1.649833,0.208064,0.068103,0.272703,0.001491,Not Available,Not Available,0.129787,0.403981,5.404715,4.932632
 1974,1.251148,1.895424,1.60631,0.20816,0.084855,0.304506,0.002154,Not Available,Not Available,0.130807,0.437467,5.483364,4.961042
 1975,1.275523,1.737742,1.520203,0.19817,0.153503,0.263371,0.002117,Not Available,Not Available,0.127269,0.392756,5.277898,4.731639
