@@ -8,6 +8,7 @@ library(rcartocolor)
 library(dplyr)
 library(gganimate)
 library(tidyr)
+library(treemapify)
 
 #-----------------------Reads the data and removes NA data -----------------------------------------
 data <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
@@ -26,18 +27,17 @@ ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
   geom_point(alpha = .7, size = 3) +
   geom_smooth(method = "lm")
 #----------------------------------2 Bar charts-------------------------------------------------------
-data1 <- data[-2:-49,]
+data1 <- data[-1:-49,-12:-14]
 head(data1)
-data2 <- data1[,-12:-14]
+data2 <- data[-2:-50,-12:-14]
 head(data2)
-total1 <- gather(data2, key = "Type", value = "Value",-Year)
-
+total2022 <- gather(data1, key = "Type", value = "Value", -Year)
+total1973 <- gather(data2, key = "Type", value = "Value", -Year)
 #this should preserve single bars
-ggplot(data=total1, aes(x = Type, y = Value, fill = Year)) + 
-  geom_bar(stat = "identity")
+ggplot(total2022, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 2022")
+ggplot(total1973, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 1973")
 
-
-#----------------------------------3 & 4 & 5 Time Series graphs---------------------------------------
+#----------------------------------3,4,5  charts-------------------------------------------------------
 ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
   labs(title = "Coal Production troughout the years", x="Year", y="Quadrillion Btu") +
   theme_bw()
