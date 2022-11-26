@@ -28,7 +28,7 @@ ggplot(test, aes(x=Year, y=Value, color = Type)) + geom_line(linewidth = 1) + xl
 ui <- fluidPage(
   titlePanel("Energy production in the US 1973-2022"),
   sidebarLayout(
-    sidebarPanel = 
+    sidebarPanel( 
       #Checkboxinput group
       checkboxGroupInput("energyProductionInput", label = "Select types of energy:",
                          choices = c("CoalProduction", 
@@ -53,9 +53,12 @@ ui <- fluidPage(
                                       "BiomassEnergyProduction")),
     #year slider
     sliderInput("yearInput", "Year", min = 1973, max = 2022, value = c(1973,2022), sep = ""),
-  ),
-  #
-  plotOutput("timeSeriesPlot")
+    ),
+    mainPanel(
+      plotOutput("timeSeriesPlot"),
+      br(),
+    )
+  )
 )
 
 # Define server logic required to draw a histogram
