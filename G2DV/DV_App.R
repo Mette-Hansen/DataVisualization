@@ -4,6 +4,7 @@ library(dslabs)
 library(tidyverse)
 library(plotly)
 library(tidyr)
+library(dplyr)
 
 #####Import Data
 
@@ -64,7 +65,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   dataInput1 <- reactive({ test %>% filter(
-    Type == input$energyProductionInput,
+    Type %in% input$energyProductionInput,
     Year >= input$yearInput[1],
     Year <= input$yearInput[2])
   })
