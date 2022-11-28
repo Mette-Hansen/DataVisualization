@@ -64,13 +64,13 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   dataInput1 <- reactive({ test %>% filter(
-    Type == input$energyProductionInput,
+    Type %in% input$energyProductionInput,
     Year >= input$yearInput[1],
     Year <= input$yearInput[2])
   })
   #Render functions
   output$timeSeriesPlot <- renderPlot({
-    ggplot(dataInput1(), aes(x=Year, y=Value, color = Type)) + geom_line(linewidth = 1) + xlab("Year") +
+    ggplot(dataInput1(), aes(x=Year, y=Value, color = Type)) + geom_line(size = 1) + xlab("Year") +
     ylab("Quadrillion Btu") +
     ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022))
   })

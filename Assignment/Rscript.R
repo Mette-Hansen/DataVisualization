@@ -25,7 +25,8 @@ totalPlusNuclear <- gather(data6, key = "Type", value = "Value",-Year)
 
 ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
   geom_point(alpha = .7, size = 3) +
-  geom_smooth(method = "lm")
+  geom_smooth(method = "lm") + 
+  labs(title = "Total Production troughout the years", x="Year", y="Quadrillion Btu")
 #----------------------------------2 & 3 Treemaps-------------------------------------------------------
 data1 <- data[-1:-49,-12:-14]
 head(data1)
@@ -37,7 +38,7 @@ total1973 <- gather(data2, key = "Type", value = "Value", -Year)
 ggplot(total2022, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 2022")
 ggplot(total1973, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 1973")
 
-#----------------------------------3,4,5  charts-------------------------------------------------------
+#----------------------------------3,4,5 time series -------------------------------------------------------
 ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
   labs(title = "Coal Production troughout the years", x="Year", y="Quadrillion Btu") +
   theme_bw()
@@ -53,7 +54,8 @@ ggplot(data = data, aes(x=Year, y=NuclearElectricPowerProduction)) + geom_line(c
 #----------------------------------6 Stacked horizontal bar chart graphs-------------------------------
 #Column 12-14
 ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
-  geom_col(aes(fill=Type), width = 0.7) + coord_flip()
+  geom_col(aes(fill=Type), width = 0.7) + coord_flip() + 
+  labs(title = "Total Production troughout the years", x="Year", y="Quadrillion Btu")
 
 #----------------------------------7. Scatterplot animated----------------------------------------------
 data <- data[,-12:-14]
