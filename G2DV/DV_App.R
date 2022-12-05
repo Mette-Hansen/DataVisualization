@@ -5,17 +5,19 @@ library(tidyverse)
 library(plotly)
 library(tidyr)
 library(dplyr)
+library(scales)
 
 #####Import Data
 
 #Change working directory
-setwd("C:/Users/Mette/Documents/DataVisualization/G2DV")
+
+#setwd("~/DataVisualization/G2DV")
 
 #Type in your data path
 data_app <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
 #remove missing values 
 data_app <- data_app[,-12:-14]
-setnafill(data_app, fill = 0)
+#setnafill(data_app, fill = 0)
 na.omit(data_app)
 head(data_app)
 
@@ -71,11 +73,15 @@ server <- function(input, output) {
   })
   #Render functions
   output$timeSeriesPlot <- renderPlot({
-    ggplot(dataInput1(), aes(x=Year, y=Value, color = Type)) + geom_line(size = 1) + xlab("Year") +
-    ylab("Quadrillion Btu") +
-    ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022))
+    ggplot(dataInput1(), aes(x = Year, y = Value, color = Type)) + geom_line(size = 1) + xlab("Year") +
+      ylab("Quadrillion Btu") +
+      scale_x_continuous(limits = c(input$yearInput[1], input$yearInput[2])) +
+      scale_y_continuous(breaks = scales::breaks_extended()) +
+      ggtitle("Energy production in the US 1973-2022") + theme_bw()
+    
   })
 }
+#+ ylim(c(0, 3.2)) + xlim(c(1973, 2022)
 
 # Run the application 
 shinyApp(ui = ui, server = server)

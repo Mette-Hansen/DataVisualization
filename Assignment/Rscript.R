@@ -21,22 +21,40 @@ data3 <- data[,1]
 data4 <- bind_cols(data2,data1)
 data5 <- bind_cols(data3,data4)
 data6 <-bind_cols(data5,data[,6])
+data7 <- data6[,-2]
+head(data4)
 totalPlusNuclear <- gather(data6, key = "Type", value = "Value",-Year)
+RenewNuclear <- gather(data7, key = "Type", value = "Value",-Year)
 
 ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
   geom_point(alpha = .7, size = 3) +
   geom_smooth(method = "lm") + 
-  labs(title = "Total Production troughout the years", x="Year", y="Quadrillion Btu")
+  theme_bw() +
+  labs(title = "Total Production throughout the years", x="Year", y="Quadrillion Btu")
+
+ggplot(RenewNuclear, aes(x = Year, y = Value, color = Type)) +
+  geom_point(alpha = .7, size = 3) +
+  geom_smooth(method = "lm") + 
+  theme_bw() +
+  labs(title = "Total Production throughout the years", x="Year", y="Quadrillion Btu")
 #----------------------------------2 & 3 Treemaps-------------------------------------------------------
 data1 <- data[-1:-49,-12:-14]
 head(data1)
 data2 <- data[-2:-50,-12:-14]
 head(data2)
+data3 <-bind_rows(data1,data2)
+
+
 total2022 <- gather(data1, key = "Type", value = "Value", -Year)
 total1973 <- gather(data2, key = "Type", value = "Value", -Year)
-#this should preserve single bars
+total1 <- gather(data3, key = "Type", value = "Value", -Year)
 ggplot(total2022, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 2022")
 ggplot(total1973, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 1973")
+
+ggplot(total1, aes(fill = Type, y = Value, x = Year))+ 
+  geom_bar(position ="fill", stat = "identity")+ 
+  ggtitle("Energy Production in 2022")+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 #----------------------------------3,4,5 time series -------------------------------------------------------
 ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
@@ -63,12 +81,12 @@ test <- gather(data, key = "Type", value = "Value", -Year)
 
 ggplot(test, aes(x=Year,y=Value, size = 2, color = Type)) +
   geom_point() +
-  scale_x_log10() +
   theme_bw() +
   labs(title = 'Year: {frame_time}', 
        x = 'Year', 
        y = 'Quadrillion Btu') +
-  transition_time(Year) +
+  transition_time(as.integer(Year)) +
+  shadow_mark(past = T, future = F, alpha(1), size = 2) +
   ease_aes('linear')
 
 
