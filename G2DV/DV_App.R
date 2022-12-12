@@ -24,9 +24,11 @@ head(data_app)
 test <- gather(data_app, key = "Type", value = "Value", -Year)
 head(test)
 
+#Test plot
 ggplot(test, aes(x=Year, y=Value, color = Type)) + geom_line(linewidth = 1) + xlab("Year") +
   ylab("Quadrillion Btu") +
-  ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022))
+  ggtitle("Energy production in the US 1973-2022") + theme_bw() + ylim(c(0,3.2)) + xlim(c(1973,2022)) +
+  scale_fill_carto_d(name = "Energy Type: ", palette = "Safe")
 
 ui <- fluidPage(
   titlePanel("Energy production in the US 1973-2022"),
@@ -77,7 +79,8 @@ server <- function(input, output) {
       ylab("Quadrillion Btu") +
       scale_x_continuous(limits = c(input$yearInput[1], input$yearInput[2])) +
       scale_y_continuous(breaks = scales::breaks_extended()) +
-      ggtitle("Energy production in the US 1973-2022") + theme_bw()
+      ggtitle("Energy production in the US 1973-2022") + theme_bw() +
+      scale_fill_carto_d(name = "Energy Type: ", palette = "Safe")
     
   })
 }

@@ -8,7 +8,6 @@ library(rcartocolor)
 library(dplyr)
 library(gganimate)
 library(tidyr)
-library(treemapify)
 
 #-----------------------Reads the data and removes NA data -----------------------------------------
 data <- read_csv("USEnergy.csv", show_col_types = FALSE, na = "Not Available")
@@ -43,37 +42,37 @@ head(data1)
 data2 <- data[-2:-50,-12:-14]
 head(data2)
 data3 <-bind_rows(data1,data2)
-
-
-total2022 <- gather(data1, key = "Type", value = "Value", -Year)
-total1973 <- gather(data2, key = "Type", value = "Value", -Year)
 total1 <- gather(data3, key = "Type", value = "Value", -Year)
-ggplot(total2022, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 2022")
-ggplot(total1973, aes(fill = Type, area = Value, label = Value)) + geom_treemap() + geom_treemap_text(colour = "white", place = "centre") + labs(title = "Energy Production in 1973")
 
-ggplot(total1, aes(fill = Type, y = Value, x = Year))+ 
+ggplot(total1, aes(fill = Type, y = Value, x = Year)) + 
   geom_bar(position ="fill", stat = "identity")+ 
-  ggtitle("Energy Production in 2022")+ 
-  theme(plot.title = element_text(hjust = 0.5))
+  ggtitle("Energy Production in 1973 and 2022")+ 
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  labs(y = "Percent", fill="Type") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(1973, 2022)) +
+  scale_fill_carto_d(name = "Energy Type: ", palette = "Safe")
 
 #----------------------------------3,4,5 time series -------------------------------------------------------
 ggplot(data = data, aes(x=Year, y=CoalProduction)) + geom_line(color="#D55E00", size=2) + 
   labs(title = "Coal Production troughout the years", x="Year", y="Quadrillion Btu") +
-  theme_bw()
+  theme_bw() + scale_fill_carto_d(palette = "Safe")
 
 ggplot(data = data, aes(x=Year, y=WindEnergyProduction)) + geom_line(color="#0072B2", size=2) + 
   labs(title = "Wind Energy Production troughout the years", x="Year", y="Quadrillion Btu") +
-  theme_bw()
+  theme_bw() + scale_fill_carto_d(palette = "Safe")
 
 ggplot(data = data, aes(x=Year, y=NuclearElectricPowerProduction)) + geom_line(color="#009e73", size=2) + 
   labs(title = "Nuclear Energy Production troughout the years", x="Year", y="Quadrillion Btu") +
-  theme_bw()
+  theme_bw() + scale_fill_carto_d(palette = "Safe")
+
 
 #----------------------------------6 Stacked horizontal bar chart graphs-------------------------------
 #Column 12-14
-ggplot(totalPlusNuclear, aes(x = Year, y = Value, color = Type)) +
+ggplot(totalPlusNuclear, aes(x = Year, y = Value)) +
   geom_col(aes(fill=Type), width = 0.7) + coord_flip() + 
-  labs(title = "Total Production troughout the years", x="Year", y="Quadrillion Btu")
+  labs(title = "Total Production troughout the years", x="Year", y="Quadrillion Btu") +
+  scale_fill_carto_d(name = "Energy Type: ", palette = "Safe")
 
 #----------------------------------7. Scatterplot animated----------------------------------------------
 data <- data[,-12:-14]
@@ -87,7 +86,8 @@ ggplot(test, aes(x=Year,y=Value, size = 2, color = Type)) +
        y = 'Quadrillion Btu') +
   transition_time(as.integer(Year)) +
   shadow_mark(past = T, future = F, alpha(1), size = 2) +
-  ease_aes('linear')
+  ease_aes('linear') +
+  scale_fill_carto_d(name = "Energy Type: ", palette = "Safe")
 
 
 
