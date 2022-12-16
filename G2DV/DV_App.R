@@ -56,6 +56,7 @@ ui <- fluidPage(
                                       "BiomassEnergyProduction")),
     #year slider
     sliderInput("yearInput", "Year", min = 1973, max = 2022, value = c(1973,2022), sep = ""),
+    downloadButton("downloadReport","Download"),
     ),
     mainPanel(
       plotOutput("timeSeriesPlot"),
@@ -80,6 +81,12 @@ server <- function(input, output) {
       ggtitle("Energy production in the US 1973-2022") + theme_bw()
     
   })
+  output$downloadReport <- downloadHandler(
+    filename = "Data_Visualization_Report.pdf",
+    content = function(file) {
+      file.copy("www/Data_Visualization_Report.pdf", file)
+    }
+  )
 }
 #+ ylim(c(0, 3.2)) + xlim(c(1973, 2022)
 

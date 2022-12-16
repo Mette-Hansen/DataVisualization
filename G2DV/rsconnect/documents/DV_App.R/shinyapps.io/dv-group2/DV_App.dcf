@@ -5,9 +5,9 @@ account: dv-group2
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7817636
-bundleId: 6594145
+bundleId: 6644241
 url: https://dv-group2.shinyapps.io/DV_App/
-when: 1670254837.27438
-lastSyncTime: 1670254837.27439
+when: 1671192897.88748
+lastSyncTime: 1671192897.88749
 asMultiple: FALSE
 asStatic: FALSE
